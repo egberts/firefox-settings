@@ -1,0 +1,83 @@
+#!/bin/bash
+
+#depends on 'ecryptfs-simple' and 'firefox'
+
+
+function run_profile {
+
+    p_src="$1"
+    p_INFO="$p_src/INFO"
+
+    p_alg="$(cat "$p_INFO" | cut -d: -f 1 )"
+    p_bytes="$(cat "$p_INFO" | cut -d: -f 2 )"
+    p_sig="$(cat "$p_INFO" | cut -d: -f 3 )"
+
+    dest="/tmp/tmp_$RANDOM$RANDOM"
+
+    mkdir "$dest"
+
+    ecryptfs-simple -o key=passphrase,ecryptfs_enable_filename_crypto=y,ecryptfs_passthrough=n,no_sig_cache,ecryptfs_unlink_sigs,ecryptfs_key_bytes=$p_bytes,ecryptfs_cipher=$p_alg,ecryptfs_fnek_sig="$p_sig",ecryptfs_sig="$p_sig" "$p_src" "$dest"
+    RETSTS=$?
+    echo "RETSTS $RETSTS"
+    if [ $RETSTS -ne 0 ]; then
+        echo "Error in ecryptfs-simple: error code $RETSTS."
+        exit $RETSTS
+    fi
+
+    firefox --no-remote --profile "$dest" &
+    echo 'Waiting for firefox to exit'
+    wait
+
+    ecryptfs-simple -u "$dest"
+    rm -r "$dest"
+
+    exit 0
+}
+
+
+function setup_profile {
+    echo 'unimplemented'
+    exit 1
+}
+
+function one_time_profile {
+    src="/tmp/tmp_$RANDOM$RANDOM"
+    dest="/tmp/tmp_$RANDOM$RANDOM"
+
+    echo "source=$src"
+    echo "destination=$dest"
+
+    mkdir "$src"
+    mkdir "$dest"
+
+    random_passphrase="$(head -c 500 /dev/urandom | tr -dc 'a-zA-Z0-9~!@#$%^&*_-' | fold -w 30 | head -n 1)"
+
+    ecryptfs-simple "$src" "$dest" <<MSG > /dev/null
+2
+$random_passphrase
+1
+2
+n
+y
+
+MSG
+    RETSTS=$?
+    if [ $RETSTS -ne 0 ]; then
+        echo "Error in ecryptfs-simple: error code $RETSTS"
+        exit $RETSTS
+    fi
+
+    firefox --no-remote --profile "$dest" &
+    echo 'Waiting for firefox to exit'
+    wait
+
+    ecryptfs-simple -u "$dest"
+    rm -r "$dest"
+    rm -r "$src"
+
+    echo 'profile removed!'
+
+    exit 0
+}
+
+one_time_profile

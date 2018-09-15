@@ -1,0 +1,27 @@
+// Disable history
+user_pref("browser.download.manager.addToRecentDocs", false);
+user_pref("browser.download.manager.retention", 0);
+user_pref("browser.download.useDownloadDir", false);
+user_pref("browser.formfill.enable", false);
+user_pref("browser.helperApps.deleteTempFileOnExit", true);
+user_pref("browser.sessionstore.privacy_level", 2);
+user_pref("browser.sessionstore.resume_from_crash", false);
+user_pref("browser.slowStartup.maxSamples", 0);
+user_pref("browser.slowStartup.notificationDisabled", true);
+user_pref("layout.css.visited_links_enabled", false);
+user_pref("network.cookie.cookieBehavior", 1);
+user_pref("network.cookie.lifetimePolicy", 2);
+user_pref("places.history.enabled", false);
+user_pref("privacy.clearOnShutdown.cache", true);
+user_pref("privacy.clearOnShutdown.cookies", true);
+user_pref("privacy.clearOnShutdown.downloads", true);
+user_pref("privacy.clearOnShutdown.formdata", true);
+user_pref("privacy.clearOnShutdown.history", true);
+user_pref("privacy.clearOnShutdown.offlineApps", true);
+user_pref("privacy.clearOnShutdown.passwords", true);
+user_pref("privacy.clearOnShutdown.sessions", true);
+user_pref("privacy.clearOnShutdown.siteSettings", true);
+user_pref("privacy.clearOnShutdown.openWindows", true);
+user_pref("security.nocertdb", true);
+user_pref("signon.autofillForms", false);
+user_pref("signon.rememberSignons", false);
